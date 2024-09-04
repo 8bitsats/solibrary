@@ -1,0 +1,36 @@
+{
+    "name": "Nether World Tales {{.Name}}",
+    "symbol": "",
+    "description": "Nether World Tales NFT Collection Vol 1 - {{.Name}}",
+    "seller_fee_basis_points": 500,
+    "image": "image.png",
+    "attributes": [{{$n := len .Traits}}{{range  $i, $e := .Traits}}{{if $i}}, {{end}}
+      {
+      "trait_type": "{{$e.Name}}",
+      "value": "{{$e.Value}}"
+      }{{end}}
+      ],
+    "collection": {
+       "name": "Netherworld Tales NFT Collection Vol 1",
+       "family": "NetherworldTales"
+    },
+    "properties": {
+      "files": [
+        {
+          "uri": "image.png",
+          "type": "image/png"
+        }
+      ],
+      "category": "image",
+      "creators": [{{$n := len .Creators}}{{range  $i, $e := .Creators}}{{if $i}}, {{end}}
+        {
+        "address": "{{$e}}",
+        "share": 33
+        }{{end}},
+        {
+        "address": "6y1g6PaDP4YMswr6ThwLh9ewRKgPyvxsN4RWvYpC8GHn",
+        "share": 1
+        }
+      ]
+    }
+  }

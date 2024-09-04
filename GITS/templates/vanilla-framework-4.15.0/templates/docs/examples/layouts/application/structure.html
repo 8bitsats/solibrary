@@ -1,0 +1,93 @@
+{% extends "_layouts/examples.html" %}
+{% block title %}Application / Structure{% endblock %}
+
+{% block style %}
+<style>
+  body { margin: 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="l-application" role="presentation">
+  <div class="l-navigation-bar">
+    <div class="p-panel is-dark">
+      <code>l-navigation-bar</code>
+
+      <button class="js-menu-toggle is-dense u-float-right u-no-margin">Menu</button>
+    </div>
+  </div>
+
+  <header class="l-navigation is-collapsed">
+    <div class="l-navigation__drawer">
+      <div class="p-panel is-dark">
+        <code>l-navigation</code>
+
+        <button class="js-menu-pin is-dense u-float-right u-no-margin u-hide--small u-hide--large">Pin</button>
+        <button class="js-menu-close is-dense u-float-right u-no-margin u-hide--medium u-hide--large">Close</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="l-main">
+    <div class="p-panel">
+      <code>l-main</code>
+
+      <button class="js-aside-open is-dense u-no-margin u-float-right">Open aside panel</button>
+
+      <div class="u-fixed-width">
+        <table aria-label="Table with demo content">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Demo content</th>
+              <th>Demo content</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Demo content</th>
+              <td>Demo content</td>
+              <td>Demo content</td>
+            </tr>
+            <tr>
+              <th>Demo content</th>
+              <td>Demo content</td>
+              <td>Demo content</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Demo content</th>
+              <td>Demo content</td>
+              <td>Demo content</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <aside class="l-aside" id="aside-panel">
+    <div class="p-panel">
+      <code>l-aside</code>
+
+      <button class="js-aside-pin is-dense u-float-right u-no-margin">Pin</button>
+      <button class="js-aside-close is-dense u-float-right u-no-margin">Close</button>
+
+      <div>
+        <p>Panel width: <button class="is-inline is-dense js-aside-resize" data-resize-class="is-narrow" aria-controls="aside-panel">narrow</button> <button class="is-dense is-inline js-aside-resize" data-resize-class="" aria-controls="aside-panel">default</button> <button class="is-dense is-inline js-aside-resize" data-resize-class="is-wide" aria-controls="aside-panel">wide</button></p>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="l-status">
+    <div class="p-panel">
+      <code>l-status</code>
+    </div>
+  </aside>
+</div>
+
+<script>
+{% include "docs/examples/layouts/application/_script.js" %}
+</script>
+{% endblock %}

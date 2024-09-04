@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Token Gated Website</title>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react@0.8.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-wallets@0.8.3"></script>
+</head>
+<body>
+    <h1>Connect your wallet to verify NFT ownership</h1>
+    <button id="connect-wallet">Connect Wallet</button>
+    <script>
+        const walletButton = document.getElementById('connect-wallet');
+
+        walletButton.addEventListener('click', async () => {
+            // Solana wallet connection logic
+            const { SolanaWalletAdapter } = window['@solana/wallet-adapter-react'];
+            const { Wallets } = window['@solana/wallet-adapter-wallets'];
+
+            const wallets = Wallets.initialize();
+            const walletAdapter = new SolanaWalletAdapter(wallets);
+
+            await walletAdapter.connect();
+            const walletAddress = walletAdapter.publicKey.toString();
+
+            // Verify NFT ownership
+            const response = await fetch('/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+    </script>
+</body>
+</html>

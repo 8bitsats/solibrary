@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memecoin Launch Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Memecoin Launch Tracker</h1>
+        <div id="memeInfo" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <p class="text-xl font-semibold">Loading memecoin info...</p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchMemeInfo() {
+            try {
+                const response = await fetch('memecoin_info.json');
+                const data = await response.json();
+                const infoDiv = document.getElementById('memeInfo');
+                infoDiv.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-4">${data.name} (${data.symbol})</h2>
+                    <p class="mb-2"><strong>Description:</strong> ${data.description}</p>
+                    <p class="mb-2"><strong>Token Address:</strong> ${data.tokenAddress}</p>
+                    <p class="mb-2"><strong>Account Address:</strong> ${data.accountAddress}</p>
+                    <p class="mb-2"><strong>Total Supply:</strong> ${data.totalSupply}</p>
+                    <p class="mb-2"><strong>Metadata URI:</strong> ${data.metadataUri}</p>
+                    <p class="mt-4 text-sm text-gray-600">Much wow! Very crypto! 🚀🌙</p>
+                `;
+            } catch (error) {
+                console.error('Error fetching memecoin info:', error);
+                document.getElementById('memeInfo').innerHTML = '<p class="text-red-500">Error loading memecoin info. Much sad. 😢</p>';
+            }
+        }
+
+        fetchMemeInfo();
+    </script>
+</body>
+</html>

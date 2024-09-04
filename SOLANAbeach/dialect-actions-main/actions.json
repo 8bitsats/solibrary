@@ -1,0 +1,8 @@
+{
+  "rules": [
+    {
+      "pathPattern": "/donate/*",
+      "apiPath": "https://dialect-actions.vercel.app/api/donate/*"
+    }
+  ]
+}

@@ -1,0 +1,1011 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viper - Pump.fun Bot</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1e1e1e;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 11px 16px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .navbar a.active,
+        .navbar a:hover {
+            background-color: #333;
+            border-radius: 4px;
+        }
+
+        .navbar .social-icons a img {
+            transition: transform 0.3s, filter 0.3s;
+        }
+
+        .navbar .social-icons a:hover img {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .alert {
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #4CAF50;
+        }
+
+        #responseBox {
+            margin-top: 15px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #bbbbbb;
+        }
+
+        .tooltip {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            color: #007BFF;
+            margin-left: 5px;
+            position: absolute;
+            right: 0;
+            top: 0px;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .faq-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .faq-link:hover {
+            text-decoration: underline;
+        }
+
+        #walletDisplay {
+            background-color: #2c2c2c;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        #walletDisplay h3 {
+            margin: 0 0 10px 0;
+            color: #fff;
+        }
+
+        #walletDisplay ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #walletDisplay ul li {
+            padding: 5px 0;
+            color: #bbb;
+        }
+
+        #walletDisplay ul li a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        #walletDisplay ul li a:hover {
+            text-decoration: underline;
+        }
+
+        #traderScreen {
+            display: none;
+        }
+
+        #traderScreen h2 {
+            color: #fff;
+        }
+
+        .wallet-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #333;
+            border-radius: 4px;
+        }
+
+        .wallet-item button {
+            margin-top: 10px;
+        }
+
+        /* Notification Container */
+        #notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            z-index: 1000;
+        }
+
+        /* Notification Message */
+        .notification-message {
+            background-color: #f4f4f4;
+            color: black;
+            border-left: 5px solid #4CAF50;
+            /* Green for success */
+            margin-bottom: 10px;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.5s ease-out;
+        }
+
+        .notification-message.fail {
+            border-left-color: #f44336;
+            /* Red for failure */
+        }
+
+        #helpScreen h3 {
+            margin-top: 20px;
+            color: #ffffff;
+        }
+
+        #helpScreen h4 {
+            margin-top: 15px;
+            color: #bbbbbb;
+        }
+
+        #helpScreen ul {
+            padding-left: 20px;
+        }
+
+        #helpScreen li {
+            margin-bottom: 10px;
+        }
+
+        .wallet-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .wallet-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .wallet-input-row input {
+            flex: 1;
+        }
+
+        .wallet-balance {
+            min-width: 100px;
+            text-align: right;
+        }
+
+        #addWalletBtn {
+            margin-top: 10px;
+        }
+
+        #walletCountDisplay {
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #888;
+}
+
+.remove-wallet-btn {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.remove-wallet-btn:hover {
+    background-color: #cc0000;
+}
+
+#addWalletBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.warning-message{
+    position: absolute;
+    right: -450px;
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="nav-title">Viper</div>
+
+        <div class="nav-links">
+            <a href="#" id="linkBundler" class="active">Pump.fun Bundler</a>
+            <a href="#" id="linkTrader">Pump.fun Trader</a>
+            <a href="#" id="linkHelp">Help</a>
+            <a href="#" id="linkChangelog">Changelog</a>
+
+        </div>
+        <div>Now also on: <a href='https://t.me/viper_pump_bot' target="_blank" style="color:green">Telegram</a></div>
+        <div class="social-icons">
+            <a href="https://t.me/bilixsoftware" target="_blank">
+                <img src="telegram.png" alt="Telegram" width="24" height="24">
+            </a>
+            <a href="https://github.com/bilix-software/pump-fun-bundler" target="_blank">
+                <img src="github.png" alt="GitHub" width="24" height="24">
+            </a>
+        </div>
+    </div>
+
+    <div id="bundlerScreen" class="container">
+        <h1>Pump.fun Launch Bundler</h1>
+        <p><b>Fees:</b><br />
+            Launch + up to 5 buys: 0.1 SOL<br />
+            Launch + up to 17 buys: 0.2 SOL<br />
+            <b>Notes:</b><br />
+            - Use the pump.fun trader screen to sell your tokens afterwards <br />
+            - Fees will be deducted within bundle, so you only pay fees if the bundle executes<br />
+            - 20+ buy bundler coming soon<br />
+            - Contact me on telegram if you want to buy some ...pump adresses to use as mint (0.02 SOL each)<br />
+            - Private keys are expected in bs58 format<br />
+            - Or generate them yourself using any of the public libraries on <a
+                href='https://github.com/search?q=solana%20vanity&type=repositories' target="_blank">github</a>
+
+        </p>
+
+        <form id="tokenForm">
+            <div class="form-group">
+                <label for="image">Token Image*</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Upload an image representing your token.</span>
+                </span>
+                <input type="file" id="image" name="image" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Token Name*</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Enter the name of your token.</span>
+                </span>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Token Description*</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Provide a description for your token.</span>
+                </span>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="symbol">Token Symbol*</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Specify the symbol for your token.</span>
+                </span>
+                <input type="text" id="symbol" name="symbol" required>
+            </div>
+            <div class="form-group">
+                <label for="twitter">Twitter (Optional)</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Enter the Twitter handle for your token/project.</span>
+                </span>
+                <input type="text" id="twitter" name="twitter">
+            </div>
+            <div class="form-group">
+                <label for="telegram">Telegram (Optional)</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Enter the Telegram link for your token/project.</span>
+                </span>
+                <input type="text" id="telegram" name="telegram">
+            </div>
+            <div class="form-group">
+                <label for="website">Website (Optional)</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Provide the website link for your token/project.</span>
+                </span>
+                <input type="text" id="website" name="website">
+            </div>
+            <div class="form-group">
+                <label for="walletInputs">Wallet Private Keys and Buy Amounts* (first wallet = dev) (format= bs58)</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Enter wallet private keys and the amount of SOL to buy for each. The balance
+                        will be fetched automatically.</span>
+                </span>
+                <div id="walletInputs" class="wallet-input-container">
+                   
+                </div>
+                <button type="button" id="addWalletBtn">Add Wallet</button>
+            </div>
+            <div class="form-group">
+                <label for="mintKey">Mint Private Key</label>
+                <span class="tooltip">?
+                    <span class="tooltiptext">Enter the private key for minting or generate a new one.
+                        IMPORTANT: this has to be a fresh keypair that hasn't been used. If it has balance on it, it
+                        will not work</span>
+                </span>
+                <input type="text" id="mintKey" name="mintKey">
+            </div>
+            <button type="button" id="genMintKeyBtn">Generate New Mint Key</button>
+            <div class="form-group" style="margin-top:5px;">
+                <label for="couponCode">Coupon Code (optional) (Removes 0.1/0.2 fees)</label>
+                <input type="text" id="couponCode" name="couponCode" placeholder="Enter coupon code">
+            </div>
+
+            <button type="submit">Submit</button> <span>Current fees: <span id="feeAmount">0.2</span> SOL (+0.01 jito
+                tip)</span>
+        </form>
+        <div id="responseBox"></div>
+        <p>Want to try it out? <a href="https://t.me/viper_discussions" target="_blank">Contact us on Telegram</a> for a trial coupon code!</p>
+
+        <!--<a href="#" class="faq-link">FAQ</a>-->
+    </div>
+
+    <div id="traderScreen" class="container">
+        <h2>Pump.fun Trader</h2>
+        <p><b>Fees:</b><br />
+            Buying and Selling 0.01 sol per tx<br />
+            <b>Notes:</b><br />
+            - Sell all can sell a maximum of 20 wallets at a time, adds a 0.01 jito tip fee to the tx<br />
+            - Fees will be deducted within the transaction so you only pay if it completes<br />
+            - Wallets filled in the bundler will be shown here<br />
+        </p>
+        <div class="controls">
+            <div>
+                <h3>Buying</h3>
+                <label for="buyToken">Token</label>
+                <input type="text" id="buyToken" placeholder="Enter mint publickey..."><br />
+                <label for="buyPvtKey">Buyer pvtkey</label>
+                <input type="password" id="buyPvtKey" placeholder="Enter private key for buyer..."><br />
+                <label for="buySolAmount">Sol amount</label>
+                <input type="number" id="buySolAmount" placeholder="Enter sol amount..">
+                <br /><br /><button id="buyAll">Buy</button>
+            </div>
+            <br />
+
+            <div>
+                <h3>Selling</h3>
+                <label for="sellToken">Token</label>
+                <input type="text" id="sellToken" placeholder="Enter mint publickey..."><br />
+                <label for="transactionPercentage">Set Sell Percentage:</label>
+                <input type="number" id="transactionPercentage" min="1" max="100" placeholder="1-100">
+                <br /> <br /> <button id="sellAll">Sell All (will always sell 100%)</button><br /><br />
+            </div>
+
+
+        </div>
+        <div id="walletTraderList"></div>
+
+        <!--<a href="#" class="faq-link">FAQ</a>-->
+    </div>
+
+    <div id="helpScreen" class="container" style="display: none;">
+        <h2>Help & FAQ</h2>
+
+        <h3>Frequently Asked Questions</h3>
+
+        <h4>Why is my bundle failing?</h4>
+        <p>There can be multiple reasons for a bundle to fail. Some common issues include:</p>
+        <ul>
+            <li>Insufficient balance (Error 0x1): Ensure you have enough SOL in your wallet to cover the transaction
+                fees and the amount you're trying to send.</li>
+            <li>Invalid instructions: Double-check that all the information you've entered is correct, including wallet
+                addresses and token details.</li>
+            <li>Network congestion: Sometimes, high network traffic can cause transactions to fail. Try again later if
+                this seems to be the case.</li>
+            <li>Outdated blockhash: If you're getting an error about an old blockhash, try refreshing the page and
+                submitting again.</li>
+        </ul>
+
+        <h4>How do I generate a mint key?</h4>
+        <p>You can use the "Generate New Mint Key" button on the Bundler screen to create a new mint key. Remember, this
+            key must be fresh and unused for the bundle to work correctly.</p>
+        <p>If you want the token to end in pump like it does when generated on the official pump.fun website, use one of
+            the tools found on github to generate solana vanity addresses. Alternatively
+            you can contact me on telegram to buy some mint keys for 0.02 SOL each.</p>
+        </p>
+
+        <h4>What are the fees for using this service?</h4>
+        <p>The fees vary depending on the number of buys in your bundle. Please refer to the fee information provided on
+            the Bundler and Trader screens for the most up-to-date rates.</p>
+
+        <h3>Need More Help?</h3>
+        <p>If you're still having issues or have questions that aren't answered here, please don't hesitate to reach
+            out:</p>
+        <ul>
+            <li>Email: <a href="mailto:info@bilix.io">info@bilix.io</a></li>
+            <li>Telegram: <a href="https://t.me/bilixsoftware" target="_blank">@bilixsoftware</a></li>
+        </ul>
+        <p>We're here to help and will get back to you as soon as possible!</p>
+    </div>
+
+    <div id="changelogScreen" class="container" style="display: none;">
+        <h2>Changelog</h2>
+        <div id="changelogContent"></div>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.0/web3.min.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script type="module">
+        import bs58 from 'https://cdn.jsdelivr.net/npm/bs58@5.0.0/+esm';
+        const connection = new solanaWeb3.Connection("https://mainnet.helius-rpc.com/?api-key=3e65cc32-bfb4-4548-8133-f17acde307f1");
+
+        console.log("Script loaded and running...");
+
+        let deployerKeysActualValue = '';
+        let walletData = [];
+
+        document.getElementById("genMintKeyBtn").addEventListener("click", function () {
+            const keypair = solanaWeb3.Keypair.generate();
+            const privateKey = bs58.encode(keypair.secretKey);
+            document.getElementById("mintKey").value = privateKey;
+        });
+
+        const walletInputs = document.getElementById('walletInputs');
+        const addWalletBtn = document.getElementById('addWalletBtn');
+        const walletCountDisplay = document.createElement('span');
+        walletCountDisplay.id = 'walletCountDisplay';
+        addWalletBtn.parentNode.insertBefore(walletCountDisplay, addWalletBtn.nextSibling);
+
+        function updateWalletCount() {
+            const count = walletInputs.querySelectorAll('.wallet-input-row').length;
+            walletCountDisplay.textContent = `${count}/17 wallets`;
+            addWalletBtn.disabled = count >= 17;
+
+            const feeAmountElement = document.getElementById('feeAmount');
+            if (count > 5) {
+                feeAmountElement.textContent = '0.2';
+            } else {
+                feeAmountElement.textContent = '0.1';
+            }
+        }
+
+function addWalletInput() {
+    if (walletData.length >= 17) {
+        alert('Maximum number of wallets (17) reached.');
+        return;
+    }
+
+    const newRow = document.createElement('div');
+    newRow.className = 'wallet-input-row';
+    newRow.innerHTML = `
+        <input type="text" placeholder="Wallet Private Key" class="wallet-address">
+        <input type="number" step="0.0001" placeholder="Buy Amount (SOL)" class="buy-amount">
+        <span class="wallet-balance">Balance: -- SOL</span>
+        <span class="warning-message" style="color: red;"></span>
+        ${walletData.length == 0 ? "" : `<button class="remove-wallet-btn" type='button'>Remove</button>`}
+    `;
+    walletInputs.appendChild(newRow);
+    walletData.push({ key: '', amount: '', balance: '' });
+
+    attachWalletListeners(newRow);
+    updateWalletCount();
+    
+    updateDeployerKeysActualValue();
+}
+
+function updateDeployerKeysActualValue() {
+    deployerKeysActualValue = walletData.map(wallet => wallet.key).join(',');
+}
+
+function attachWalletListeners(row) {
+    const addressInput = row.querySelector('.wallet-address');
+    const amountInput = row.querySelector('.buy-amount');
+    const balanceSpan = row.querySelector('.wallet-balance');
+    const warningSpan = row.querySelector('.warning-message');
+    const index = walletData.length - 1;
+
+    addressInput.addEventListener('input', () => {
+        walletData[index].key = addressInput.value;
+        updateDeployerKeysActualValue();
+    });
+
+    amountInput.addEventListener('input', () => {
+        walletData[index].amount = amountInput.value;
+        checkBalanceAndWarn(addressInput.value, parseFloat(amountInput.value), balanceSpan, warningSpan, index === 0);
+    });
+
+    addressInput.addEventListener('blur', async () => {
+        const address = addressInput.value;
+        if (address) {
+            try {
+                const keypair = await getKeyPairFromPrivateKey(address);
+                const balance = await getWalletBalance(keypair.publicKey);
+                walletData[index].balance = balance;
+                balanceSpan.textContent = `Balance: ${balance.toFixed(4)} SOL`;
+                checkBalanceAndWarn(address, parseFloat(amountInput.value), balanceSpan, warningSpan, index === 0);
+            } catch (error) {
+                console.error('Error fetching balance:', error);
+                balanceSpan.textContent = 'Balance: Error';
+            }
+        }
+    });
+
+    const removeWalletBtn = row.querySelector('.remove-wallet-btn');
+    if (removeWalletBtn) {
+        removeWalletBtn.addEventListener('click', () => {
+            row.remove();
+            walletData.splice(index, 1);
+            updateWalletCount();
+            updateDeployerKeysActualValue();
+        });
+    }
+}
+
+async function checkBalanceAndWarn(address, amount, balanceSpan, warningSpan, isFirstWallet) {
+    if (!address || isNaN(amount)) return;
+
+    try {
+        const balance = parseFloat(balanceSpan.textContent.split(': ')[1]);
+        if (isNaN(balance)) return;
+
+        const fee = walletData.length <= 5 ? 0.11 : 0.21;
+        const requiredBalance = isFirstWallet ? amount * 1.05 + fee : amount * 1.05;
+
+        if (balance < requiredBalance) {
+            const couponCode = document.getElementById('couponCode').value;
+            if(!couponCode || couponCode == ""){
+                warningSpan.textContent = `Warning: Insufficient balance. Need at least ${requiredBalance.toFixed(4)} SOL.`;
+            }
+        } else {
+            warningSpan.textContent = '';
+        }
+    } catch (error) {
+        console.error('Error checking balance:', error);
+    }
+}
+
+        async function getWalletBalance(address) {
+            const publicKey = new solanaWeb3.PublicKey(address);
+            const balance = await connection.getBalance(publicKey);
+            return balance / solanaWeb3.LAMPORTS_PER_SOL;
+        }
+
+        addWalletBtn.addEventListener('click', addWalletInput);
+
+        // Add initial wallet input
+        addWalletInput();
+        addWalletInput();
+
+        document.getElementById('tokenForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const form = e.target;
+            const walletRows = walletInputs.querySelectorAll('.wallet-input-row');
+            const deployerKeys = [];
+            const buyAmounts = [];
+
+            for (const row of walletRows) {
+                const address = row.querySelector('.wallet-address').value;
+                const amount = row.querySelector('.buy-amount').value;
+                if (address && amount) {
+                    deployerKeys.push(address);
+                    buyAmounts.push(amount);
+                }
+            }
+
+            if (deployerKeys.length === 0) {
+                alert('Please enter at least one wallet address and buy amount.');
+                return;
+            }
+
+            if (deployerKeys.length !== buyAmounts.length) {
+                alert('The number of buy amounts must match the number of wallet addresses.');
+                return;
+            }
+
+            if (!confirm("Are you sure you want to submit this bundle? This action can't be reversed...")) {
+                return;
+            }
+
+            const formData = new FormData(form);
+            const couponCode = document.getElementById('couponCode').value;
+            if (couponCode) {
+                formData.set('coupon', couponCode);
+            }
+
+            formData.set('deployerKeys', deployerKeys.join(','));
+            formData.set('buyAmounts', buyAmounts.join(','));
+
+            for (let key of deployerKeys) {
+                try {
+                    await getKeyPairFromPrivateKey(key);
+                } catch (error) {
+                    console.log(error);
+                    alert("One of your wallet private keys is invalid, please check and try again.");
+                    return;
+                }
+            }
+
+            try {
+                await getKeyPairFromPrivateKey(formData.get('mintKey'));
+            } catch (error) {
+                console.log(error);
+                alert("Your mint private key is invalid, please check and try again.");
+                return;
+            }
+
+            try {
+                showNotification('Sending launch bundle...');
+
+                const response = await fetch('https://pump-fun-backend.onrender.com/create-and-buy', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const responseBox = document.getElementById('responseBox');
+
+                if (response.ok) {
+                    const responseBody = await response.json();
+                    const bundleUUID = responseBody.bundleUUID;
+                    const error = responseBody.error;
+                    const mint = responseBody.mint;
+                    if (!error) {
+                        responseBox.innerHTML = `<div class="alert success">Bundle submitted successfully! <a href='https://explorer.jito.wtf/bundle/${bundleUUID}' target='_blank'>${bundleUUID}</a>
+            <br/>
+            View your token here: <a href='https://pump.fun/${mint}' target="_blank">${mint}</a>
+            </div>`;
+
+                        document.getElementById('sellToken').value = mint;
+                        document.getElementById('buyToken').value = mint;
+                        showNotification(`Transaction successful! <a href="https://explorer.jito.wtf/bundle/${bundleUUID}" target="_blank">View on Jito</a>`);
+
+                    } else {
+                        if (error == "Timeout waiting for bundle result" || error.msg.toString() == "Timeout waiting for bundle result") {
+                            document.getElementById('sellToken').value = mint;
+                            document.getElementById('buyToken').value = mint;
+                            responseBox.innerHTML = `<div class="alert">There was no response from jito, please check if your token was created...<br/><br/>
+                            If your token was successfully created you can view it here: <a href='https://pump.fun/${mint}' target="_blank">${mint}</a>
+                    </div>`;
+                        }
+                        else {
+                            responseBox.innerHTML = `<div class="alert">There was a problem executing your bundle, check the error message below:<br/><br/>
+                ${error.msg.toString()}
+            </div>`;
+                        }
+
+                    }
+                } else {
+                    const errorText = await response.text();
+                    responseBox.innerHTML = `<div class="alert">An error occurred: ${errorText}</div>`;
+                }
+            } catch (error) {
+                const responseBox = document.getElementById('responseBox');
+                responseBox.innerHTML = `<div class="alert">An error occurred: ${error.message}</div>`;
+            }
+        });
+
+        document.getElementById('linkHelp').addEventListener('click', function (event) {
+            event.preventDefault();
+            showScreen('help');
+            document.getElementById('linkHelp').classList.add('active');
+            document.getElementById('linkBundler').classList.remove('active');
+            document.getElementById('linkTrader').classList.remove('active');
+            document.getElementById('linkChangelog').classList.remove('active');
+
+        });
+
+        function showScreen(screen) {
+            console.log(`Switching to screen: ${screen}`);
+            document.getElementById('bundlerScreen').style.display = (screen === 'bundler') ? 'block' : 'none';
+            document.getElementById('traderScreen').style.display = (screen === 'trader') ? 'block' : 'none';
+            document.getElementById('helpScreen').style.display = (screen === 'help') ? 'block' : 'none';
+            document.getElementById('changelogScreen').style.display = (screen === 'changelog') ? 'block' : 'none';
+            if (screen === 'trader') {
+                showTraderScreen();
+            }
+        }
+
+        document.getElementById('linkBundler').addEventListener('click', function (event) {
+            event.preventDefault();
+            showScreen('bundler');
+            document.getElementById('linkBundler').classList.add('active');
+            document.getElementById('linkTrader').classList.remove('active');
+            document.getElementById('linkHelp').classList.remove('active');
+            document.getElementById('linkChangelog').classList.remove('active');
+        });
+
+        document.getElementById('linkTrader').addEventListener('click', function (event) {
+            event.preventDefault();
+            showScreen('trader');
+            document.getElementById('linkTrader').classList.add('active');
+            document.getElementById('linkBundler').classList.remove('active');
+            document.getElementById('linkHelp').classList.remove('active');
+            document.getElementById('linkChangelog').classList.remove('active');
+
+        });
+
+        function showTraderScreen() {
+            const walletTraderList = document.getElementById('walletTraderList');
+            const deployerKeys = deployerKeysActualValue.split(',').map(key => key.trim());
+            walletTraderList.innerHTML = '';
+            console.log(deployerKeys)
+            deployerKeys.forEach(async (key, index) => {
+                if (key === '') return;
+                const publicKey = (await getKeyPairFromPrivateKey(key)).publicKey.toString();
+                const walletDiv = document.createElement('div');
+                walletDiv.className = 'wallet-item';
+                walletDiv.innerHTML = `
+    <p>Wallet ${index + 1}: <a href="https://solscan.io/address/${publicKey}" target="_blank">${publicKey}</a></p>
+    <button onclick="sellTokens('${key}')">Sell</button>
+`;
+                walletTraderList.appendChild(walletDiv);
+            });
+        }
+
+        async function getKeyPairFromPrivateKey(key) {
+            return solanaWeb3.Keypair.fromSecretKey(
+                new Uint8Array(bs58.decode(key))
+            );
+        }
+
+        document.getElementById('sellAll').addEventListener('click', async function () {
+            const deployerKeys = deployerKeysActualValue.split(',').map(key => key.trim()).filter(x => x != "").slice(0, 20);
+
+            const mint = document.getElementById("sellToken").value;
+            if (mint == "") {
+                alert('Please enter a mint public key in the Token field.');
+                return;
+            }
+            if (deployerKeys.length == 0) {
+                alert('You need to have at least wallet to be able to sell.');
+                return;
+            }
+
+            showNotification('Sending sell all bundle...');
+
+            const response = await fetch('https://pump-fun-backend.onrender.com/sellAll', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mint: mint, pvtkeys: deployerKeys })
+            });
+
+            const result = await response.json();
+            if (!result.error) {
+                showNotification(`Transaction successful! <a href="https://explorer.jito.wtf/bundle/${result.bundleUUID}" target="_blank">View on Jito</a>`);
+            } else {
+                showNotification('Transaction failed.', false);
+            }
+        });
+
+        window.sellTokens = async function sellTokens(privateKey, percentage = document.getElementById('transactionPercentage').value) {
+            showNotification('Sending sell transaction...');
+            if (percentage < 1 || percentage > 100) {
+                alert('Please enter a valid percentage between 1 and 100.');
+                return;
+            }
+
+            const mint = document.getElementById("sellToken").value;
+            if (mint == "") {
+                alert('Please enter a mint public key in the Token field.');
+                return;
+            }
+
+            const response = await fetch('https://pump-fun-backend.onrender.com/sell', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mint: mint, pvtkey: privateKey, percentage: percentage })
+            });
+
+            const result = await response.json();
+            if (result.txHash) {
+                showNotification(`Transaction successful! <a href="https://solscan.io/tx/${result.txHash}" target="_blank">View on Solscan</a>`);
+            } else {
+                showNotification('Transaction failed.', false);
+            }
+        }
+
+        async function buyTokens() {
+            showNotification('Sending buy transaction...');
+            const buySolAmount = document.getElementById('buySolAmount').value;
+            const buyPvtKey = document.getElementById('buyPvtKey').value;
+            if (buySolAmount === '' || buyPvtKey === '') {
+                alert('Please enter a valid amount and private key');
+                return;
+            }
+            const mint = document.getElementById("buyToken").value;
+            if (mint == "") {
+                alert('Please enter a mint public key in the Token field.');
+                return;
+            }
+            try {
+                const response = await fetch('https://pump-fun-backend.onrender.com/buy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ mint: mint, pvtkey: buyPvtKey, amount: buySolAmount, slippage: 0.1 })
+                });
+                const result = await response.json();
+                if (result.txHash) {
+                    showNotification(`Transaction successful! <a href="https://solscan.io/tx/${result.txHash}" target="_blank">View on Solscan</a>`);
+                    if (deployerKeysActualValue.indexOf(buyPvtKey) === -1) {
+                        deployerKeysActualValue += ',' + buyPvtKey;
+                        const publicKey = (await getKeyPairFromPrivateKey(buyPvtKey)).publicKey.toString();
+                        const walletDiv = document.createElement('div');
+                        walletDiv.className = 'wallet-item';
+                        walletDiv.innerHTML = `
+            <p>Wallet ${deployerKeysActualValue.split(',').length}<a href="https://solscan.io/address/${publicKey}" target="_blank">${publicKey}</a></p>
+            <button onclick="sellTokens('${buyPvtKey}')">Sell</button>
+        `;
+                        walletTraderList.appendChild(walletDiv);
+                    }
+                } else {
+                    throw new Error('No transaction hash returned');
+                }
+            } catch (error) {
+                showNotification('Transaction failed.', false);
+            }
+        }
+
+        document.getElementById('buyAll').addEventListener('click', buyTokens);
+
+        function showNotification(message, isSuccess = true) {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification-message ${isSuccess ? '' : 'fail'}`;
+            notification.innerHTML = message;
+
+            container.appendChild(notification);
+
+            setTimeout(() => {
+                container.removeChild(notification);
+            }, 20000);
+        }
+
+        async function fetchChangelog() {
+            const changelogUrl = 'https://raw.githubusercontent.com/bilix-software/pump-fun-bundler/main/changelog.md';
+            try {
+                const response = await fetch(changelogUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const markdown = await response.text();
+                
+                // You might want to use a Markdown parser here for better formatting
+                // For now, we'll just replace newlines with <br> tags
+                const formattedChangelog = markdown.replace(/\n/g, '<br>');
+                
+                document.getElementById('changelogContent').innerHTML = formattedChangelog;
+            } catch (error) {
+                console.error('Error fetching changelog:', error);
+                document.getElementById('changelogContent').innerHTML = 'Error loading changelog. Please try again later.';
+            }
+        }
+        
+
+        // Add event listener for the new changelog tab
+        document.getElementById('linkChangelog').addEventListener('click', function(event) {
+            event.preventDefault();
+            showScreen('changelog');
+            document.getElementById('linkChangelog').classList.add('active');
+            document.getElementById('linkBundler').classList.remove('active');
+            document.getElementById('linkTrader').classList.remove('active');
+            document.getElementById('linkHelp').classList.remove('active');
+            fetchChangelog(); // Fetch and display the changelog when the tab is clicked
+        });
+
+
+    </script>
+
+</body>
+
+</html>

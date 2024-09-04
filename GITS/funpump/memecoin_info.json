@@ -1,0 +1,9 @@
+{
+  "name": "",
+  "symbol": "$MEM",
+  "description": "",
+  "tokenAddress": "HFJs5MvxkjBBmi6zJ3yZ7vLfMNBg8f6wQcpAecUD5DQa",
+  "accountAddress": "CjphFS9fZLdzvjqDXsn5KrfAQ1dsioFGapzv18YHifWY",
+  "totalSupply": "1000000000000",
+  "metadataUri": "data:application/json;base64,eyJuYW1lIjogIiIsICJzeW1ib2wiOiAiJE1FTSIsICJkZXNjcmlwdGlvbiI6ICIiLCAiaW1hZ2UiOiAiaHR0cHM6Ly9leGFtcGxlLmNvbS9wbGFjZWhvbGRlci1tZW1lLnBuZyJ9"
+}
